@@ -1,33 +1,61 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // 🌟 URLパラメータからリンクを自動入力
+  const params = new URLSearchParams(window.location.search);
+  const autoUrl = params.get("url");
+  if (autoUrl) {
+    document.getElementById("url").value = autoUrl;
+  }
+
   const calendarEl = document.getElementById("calendar");
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
     locale: "ja",
 
+    // イベントをクリックしたときの処理（メモ＋リンクをポップアップ）
     eventClick: function (info) {
       info.jsEvent.preventDefault();
+      const event = info.event;
+      const note = event.extendedProps.note || "（メモはありません）";
+      const url = event.url || "#";
 
-      document.getElementById("popup-title").textContent = info.event.title;
-      document.getElementById("popup-memo").textContent = info.event.extendedProps.memo || "（メモなし）";
+      const content = `
+        <strong>${event.title}</strong><br>
+        <p>${note}</p>
+        <a href="${url}" target="_blank">▶ YouTubeを見る</a>
+      `;
 
-      const linkEl = document.getElementById("popup-link");
-      if (info.event.url) {
-        linkEl.href = info.event.url;
-        linkEl.style.display = "inline-block";
-      } else {
-        linkEl.style.display = "none";
-      }
+      // ポップアップ表示（alert風）
+      const popup = document.createElement("div");
+      popup.innerHTML = content;
+      popup.style.position = "fixed";
+      popup.style.top = "30%";
+      popup.style.left = "10%";
+      popup.style.right = "10%";
+      popup.style.padding = "20px";
+      popup.style.background = "#fff";
+      popup.style.border = "1px solid #ccc";
+      popup.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
+      popup.style.zIndex = 9999;
+      popup.style.borderRadius = "10px";
 
-      document.getElementById("popup").style.display = "block";
+      const closeBtn = document.createElement("button");
+      closeBtn.innerText = "閉じる";
+      closeBtn.style.marginTop = "10px";
+      closeBtn.onclick = () => popup.remove();
+
+      popup.appendChild(closeBtn);
+      document.body.appendChild(popup);
     },
 
+    // 右クリックで削除
     eventDidMount: function (info) {
       info.el.addEventListener("contextmenu", function (e) {
         e.preventDefault();
         const confirmDelete = confirm(`「${info.event.title}」を削除しますか？`);
         if (confirmDelete) {
           info.event.remove();
+
           const updatedEvents = savedEvents.filter(e =>
             !(e.title === info.event.title && e.start === info.event.startStr)
           );
@@ -39,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // localStorage処理
+  // 保存・読み込み
   function saveEvents(events) {
     localStorage.setItem("recipeEvents", JSON.stringify(events));
   }
@@ -56,32 +84,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
   calendar.render();
 
-  // 登録フォーム
+  // 登録フォームの処理
   document.getElementById("recipe-form").addEventListener("submit", function (e) {
     e.preventDefault();
 
     const title = document.getElementById("title").value;
     const url = document.getElementById("url").value;
-    const memo = document.getElementById("memo").value;
     const date = document.getElementById("date").value;
+    const note = document.getElementById("note").value;
 
-    const eventData = {
+    const newEvent = {
       title: title,
       start: date,
       url: url,
-      memo: memo,
+      note: note,
       allDay: true
     };
 
-    calendar.addEvent(eventData);
-    savedEvents.push(eventData);
+    calendar.addEvent(newEvent);
+    savedEvents.push(newEvent);
     saveEvents(savedEvents);
 
     this.reset();
   });
 
-  // ポップアップを閉じる処理
-  document.getElementById("popup-close").addEventListener("click", function () {
-    document.getElementById("popup").style.display = "none";
-  });
+  // 🌟 Service Worker 登録（PWA）
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js").then(function () {
+      console.log("Service Worker registered!");
+    });
+  }
 });
