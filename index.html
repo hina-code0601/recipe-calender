@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>レシピカレンダー</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>かんたんレシピカレンダー</h1>
+  <p class="description">
+    お気に入りのレシピや、レシピを保存する場所に使ってみてください！
+  </p>
+  <div id="calendar"></div>
+
+  <h2>🍽 レシピ追加フォーム</h2>
+  <form id="recipe-form">
+    <input type="text" id="title" placeholder="レシピのタイトル" required />
+    <input type="url" id="url" placeholder="YouTubeのリンク" required />
+    <input type="text" id="memo" placeholder="メモ（例：材料）" />
+    <input type="date" id="date" required />
+    <button type="submit">登録</button>
+  </form>
+
+  <!-- ポップアップ -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <span id="popup-close" class="popup-close">&times;</span>
+      <h3 id="popup-title"></h3>
+      <p id="popup-memo"></p>
+      <a id="popup-link" href="#" target="_blank">▶ YouTubeリンクを見る</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
