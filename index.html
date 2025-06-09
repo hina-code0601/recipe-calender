@@ -6,6 +6,21 @@
   <title>レシピカレンダー</title>
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+ 
+ <!--この下が新しいからエラーがあれば消す-->
+
+  <link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<meta name="theme-color" content="#3498db" />
+
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js").then(function () {
+      console.log("Service Worker registered!");
+    });
+  }
+</script>
+
 </head>
 <body>
   <h1>かんたんレシピカレンダー</h1>
@@ -18,7 +33,7 @@
   <form id="recipe-form">
     <input type="text" id="title" placeholder="レシピのタイトル" required />
     <input type="url" id="url" placeholder="YouTubeのリンク" required />
-    <input type="text" id="memo" placeholder="メモ（例：材料）" />
+    <input type="text" id="note" placeholder="メモ（例：材料）" />
     <input type="date" id="date" required />
     <button type="submit">登録</button>
   </form>
