@@ -31,9 +31,9 @@ form {
 form input {
   width: calc(100% - 20px);
   padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  margin-bottom: 12px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
 }
 
 form button {
@@ -131,5 +131,33 @@ form button:hover {
   .fc-button {
     font-size: 0.8rem !important;
     padding: 4px 6px !important;
+  }
+}
+
+/* スマホサイズ調整 */
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  form {
+    padding: 15px;
+  }
+
+  form input,
+  form textarea {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  form button {
+    font-size: 18px;
+    padding: 14px;
+    width: 100%;
+  }
+
+  #calendar {
+    padding: 10px;
   }
 }
